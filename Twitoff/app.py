@@ -1,7 +1,7 @@
 """Code for our app"""
 
 from flask import Flask
-from models import DB
+from .models import DB
 
 # make our app factory
 
