@@ -10,7 +10,45 @@ set FLASK_APP=Twitoff:APP
 flask run
 flask shell to run flask inside command line
 
-## Getting information from database inside command line
+## getting TWITTER information
+
+>>> from Twitoff.twitter import *
+>>> dir()
+['BASILICA', 'DB', 'TWITTER', 'TWITTER_AUTH', 'Tweet', 'User', '__builtins__', 'app', 'basilica', 'config', 'g', 'tweepy']
+>>> TWITTER
+<tweepy.api.API object at 0x000002216639F308>
+>>> BASILICA
+<basilica.Connection object at 0x000002216639F388>
+>>> User
+<class 'Twitoff.models.User'>
+>>> dir(TWITTER)
+
+twiiter_user=TWITTER.get_user('elonmusk')
+
+>>> tweets = twiiter_user.timeline()
+>>> tweets
+
+>>> len(tweets)
+20
+>>> tweets[0].text
+
+#  pull 200 tweets, exclude replies and retweets, and include threads(extended tweets)
+tweets = twiiter_user.timeline(count=200, exclude_replies=True, include_rts=False, mode='extended')
+
+# embedding tweets using basilica
+db_user = User(id=twiiter_user.id, name=twiiter_user.screen_name, newest_tweet_id=tweets[0].id)
+
+>>> for tweet in tweets:
+...     embedding=BASILICA.embed_sentence(tweet.full_text,model='twitter')
+...     db_tweet = Tweet(id=tweet.id, text=tweet.full_text[:500], embedding=embedding)
+...     DB.session.add(db_tweet)
+...     db_user.tweets.append(db_tweet)
+
+>>> DB.session.add(db_user)
+>>> DB.session.commit()
+
+
+## Getting information from DATABASE INSIDE command line
 
 >>> from Twitoff.models import *
 >>> DB.drop_all()
@@ -39,7 +77,7 @@ flask shell to run flask inside command line
 'austen'
 >>> exit()
 
-## Basilica
+## BASILICA
 
 flask shell
 from TWITOFF.twitter import *
@@ -51,7 +89,7 @@ tweet_text = tweets[0].text
 embedding=BASILICA.embed_sentence(tweet_text,model='twitter')
 
 --------------------------------------------------------------------------------------
-
+## TWITTER
 >>> from TWITOFF.twitter import *
 >>> twitter_user=TWITTER.get_user('elonmusk')
 >>> tweets=twitter_user.timeline(count=200, exclude_replies=True, include_rts=False, tweet_mode='extended')
