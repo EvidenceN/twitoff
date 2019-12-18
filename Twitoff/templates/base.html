@@ -11,14 +11,31 @@
         <link rel="stylesheet" href="https://unpkg.com/picnic">
     </head>
 
-    {% block content %}
-
-    <form action="/user" method="post">
-        <input type='text' name='user_name' placeholder="User to add">
-        <input type="submit" value="Add User">
-    </form>
-
     <body>
+
+        {% block content %}
+
+        <h1> Twitoff is cool! </h1>
+
+        <form action="/user" method="post">
+            <input type='text' name='user_name' placeholder="User to add">
+            <input type="submit" value="Add User">
+        </form>
+
+        <form action ="/compare" method="POST">
+            <select name="user1">
+                {% for user in users %}
+                <option value="{{ user.name}}">{{user.name}}</option>
+                {% endfor %}
+            </select>
+            <select name="user2">
+                    {% for user in users %}
+                    <option value="{{ user.name}}">{{user.name}}</option>
+                    {% endfor %}
+            </select>
+            <input type="text" name="tweet_text" placeholder="Tweet to predict">
+            <input type="submit" value="Compare Users">
+        </form>
         <!--
         <h1>Twitoff is totally cool</h1>
         <p>Content goes here ... </p>
@@ -33,8 +50,7 @@
 
         </ul>
         -->
+        {% endblock %}
     </body>
-
-    {% endblock %}
 
 </html>
