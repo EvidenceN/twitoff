@@ -103,3 +103,20 @@ embedding=BASILICA.embed_sentence(tweet_text,model='twitter')
 
 >>> DB.session.add(db_user)
 >>> DB.session.commit()
+
+## Heroku/last day instructions
+
+#in my terminal in main github repo for this week!
+pipenv shell
+heroku login
+heroku git:remote -a USERNAME-twitoff
+git remote --verbose
+which gunicorn
+gunicorn TWITOFF:APP
+echo "web: gunicorn TWITOFF:APP -t 120" > Procfile
+git add .
+git commit -am 'Deploying and adding Procfile'
+git push origin master
+git push heroku master
+heroku addons:create heroku-postgresql:hobby-dev
+USERNAME-twitoff.herokuapp.com/reset #reset the database, create tables!
